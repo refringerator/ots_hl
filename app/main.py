@@ -4,15 +4,13 @@ from typing import List, Union
 
 from fastapi import FastAPI
 
-from .models import (
+from models import (
     LoginPostRequest,
     LoginPostResponse,
     ErrorResponse,
     User,
-    UserGetIdGetResponse,
     UserRegisterPostRequest,
     UserRegisterPostResponse,
-    UserSearchGetResponse,
 )
 
 app = FastAPI(
@@ -31,7 +29,7 @@ app = FastAPI(
 )
 def post_login(
     body: LoginPostRequest = None,
-) -> Union[LoginPostResponse, ErrorResponse]:
+) -> LoginPostResponse | ErrorResponse:
     pass
 
 
@@ -73,5 +71,5 @@ def post_user_register(
 )
 def get_user_search(
     first_name: str, last_name: str = ...
-) -> Union[List[User], UserSearchGetResponse, ErrorResponse]:
+) -> Union[List[User], ErrorResponse]:
     pass
