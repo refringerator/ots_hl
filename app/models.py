@@ -29,19 +29,7 @@ class LoginPostResponse(BaseModel):
     token: Optional[str] = Field(None, example="e4d2e6b0-cde2-42c5-aac3-0b8316f21e58")
 
 
-class LoginPostResponse1(BaseModel):
-    message: str = Field(..., description="Описание ошибки")
-    request_id: Optional[str] = Field(
-        None,
-        description="Идентификатор запроса. Предназначен для более быстрого поиска проблем.",
-    )
-    code: Optional[int] = Field(
-        None,
-        description="Код ошибки. Предназначен для классификации проблем и более быстрого решения проблем.",
-    )
-
-
-class LoginPostResponse2(BaseModel):
+class ErrorResponse(BaseModel):
     message: str = Field(..., description="Описание ошибки")
     request_id: Optional[str] = Field(
         None,
@@ -64,75 +52,3 @@ class UserRegisterPostRequest(BaseModel):
 
 class UserRegisterPostResponse(BaseModel):
     user_id: Optional[str] = Field(None, example="e4d2e6b0-cde2-42c5-aac3-0b8316f21e58")
-
-
-class UserRegisterPostResponse1(BaseModel):
-    message: str = Field(..., description="Описание ошибки")
-    request_id: Optional[str] = Field(
-        None,
-        description="Идентификатор запроса. Предназначен для более быстрого поиска проблем.",
-    )
-    code: Optional[int] = Field(
-        None,
-        description="Код ошибки. Предназначен для классификации проблем и более быстрого решения проблем.",
-    )
-
-
-class UserRegisterPostResponse2(BaseModel):
-    message: str = Field(..., description="Описание ошибки")
-    request_id: Optional[str] = Field(
-        None,
-        description="Идентификатор запроса. Предназначен для более быстрого поиска проблем.",
-    )
-    code: Optional[int] = Field(
-        None,
-        description="Код ошибки. Предназначен для классификации проблем и более быстрого решения проблем.",
-    )
-
-
-class UserGetIdGetResponse(BaseModel):
-    message: str = Field(..., description="Описание ошибки")
-    request_id: Optional[str] = Field(
-        None,
-        description="Идентификатор запроса. Предназначен для более быстрого поиска проблем.",
-    )
-    code: Optional[int] = Field(
-        None,
-        description="Код ошибки. Предназначен для классификации проблем и более быстрого решения проблем.",
-    )
-
-
-class UserGetIdGetResponse1(BaseModel):
-    message: str = Field(..., description="Описание ошибки")
-    request_id: Optional[str] = Field(
-        None,
-        description="Идентификатор запроса. Предназначен для более быстрого поиска проблем.",
-    )
-    code: Optional[int] = Field(
-        None,
-        description="Код ошибки. Предназначен для классификации проблем и более быстрого решения проблем.",
-    )
-
-
-class UserSearchGetResponse(BaseModel):
-    message: str = Field(..., description="Описание ошибки")
-    request_id: Optional[str] = Field(
-        None,
-        description="Идентификатор запроса. Предназначен для более быстрого поиска проблем.",
-    )
-    code: Optional[int] = Field(
-        None,
-        description="Код ошибки. Предназначен для классификации проблем и более быстрого решения проблем.",
-    )
-
-
-class UserSearchGetResponse1(BaseModel):
-    message: str = Field(..., description="Описание ошибки")
-    request_id: Optional[str] = Field(
-        None,
-        description="Идентификатор запроса. Предназначен для более быстрого поиска проблем.",
-    )
-    code: Optional[int] = Field(
-        None,
-        description="Код ошибки. Предназначен для классификации проблем и более быстрого решения проблем.",
-    )
