@@ -43,7 +43,7 @@ def post_login(
 )
 def get_user_get_id(
     id: str,
-) -> Union[User, UserGetIdGetResponse, ErrorResponse]:
+) -> User | ErrorResponse:
     pass
 
 
@@ -57,7 +57,7 @@ def get_user_get_id(
 )
 def post_user_register(
     body: UserRegisterPostRequest = None,
-) -> Union[UserRegisterPostResponse, ErrorResponse]:
+) -> UserRegisterPostResponse | ErrorResponse:
     pass
 
 
@@ -71,5 +71,5 @@ def post_user_register(
 )
 def get_user_search(
     first_name: str, last_name: str = ...
-) -> Union[List[User], ErrorResponse]:
+) -> List[User] | ErrorResponse:
     pass
