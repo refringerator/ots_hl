@@ -4,7 +4,7 @@ from typing import List, Union
 
 from fastapi import FastAPI
 
-from models import (
+from .models import (
     LoginPostRequest,
     LoginPostResponse,
     ErrorResponse,
