@@ -58,15 +58,3 @@ def post_user_register(
     pass
 
 
-@app.get(
-    "/user/search",
-    response_model=List[User],
-    responses={
-        "500": {"model": ErrorResponse},
-        "503": {"model": ErrorResponse},
-    },
-)
-def get_user_search(
-    first_name: str, last_name: str = ...
-) -> List[User] | ErrorResponse:
-    pass
