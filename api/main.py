@@ -45,7 +45,6 @@ def register_user(user_model: UserRegisterPostRequest):
                   hashed_password
                   )
               )
-    print(ret)
     return str(user_id)
 
 def get_user(db, username):
@@ -55,6 +54,19 @@ def get_user(db, username):
             "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
         }
     )
+
+def get_user_by_id(user_id: str):
+    uid = uuid.UUID(user_id)
+    user = query_get("""
+        SELECT 
+            user.id,
+            user.first_name,
+            user.second_name,
+            user.age
+        FROM user 
+        WHERE id = %s
+        """, (uid.bytes))
+    return user
 
 
 def authenticate_user(db, username, password):
@@ -91,7 +103,9 @@ def post_login(
 def get_user_get_id(
     id: str,
 ) -> User | ErrorResponse:
-    pass
+    data = get_user_by_id(id)[0]
+    data['id'] = id
+    return User(**data)
 
 
 @app.post(

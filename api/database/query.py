@@ -17,6 +17,7 @@ def init_connection():
         database=os.environ.get("DATABASE"),
         cursorclass=pymysql.cursors.DictCursor,
         conv=converions,
+        binary_prefix=True
     )
     return connection
 
