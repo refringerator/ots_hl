@@ -5,5 +5,6 @@ CREATE TABLE `user` (
   `password_hash` char(60) NOT NULL,
   `age` int,
   `biographt` varchar(256),
-  `city` varchar(256)
+  `city` varchar(256),
+  `password_hash` varchar(256)
 );

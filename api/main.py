@@ -1,4 +1,3 @@
-from typing import List
 from fastapi import FastAPI
 
 from models import (
@@ -9,11 +8,62 @@ from models import (
     UserRegisterPostRequest,
     UserRegisterPostResponse,
 )
+from datetime import datetime
+from auth import Auth
+from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+import uuid
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+auth_handler = Auth()
+
+from database.query import query_get, query_put, query_update
+
 
 app = FastAPI(
     title="OTUS Highload Architect",
     version="1.0.0",
 )
+def register_user(user_model: UserRegisterPostRequest):
+    hashed_password = auth_handler.get_password_hash(user_model.password)
+    user_id = uuid.uuid4()
+    
+    ret = query_put("""
+              INSERT INTO user (
+                  id,
+                  first_name,
+                  second_name,
+                  age,
+                  password_hash
+                  ) VALUES (%s,%s,%s,%s,%s)
+              """,
+              (
+                  user_id.bytes,
+                  user_model.first_name,
+                  user_model.second_name,
+                  user_model.age,
+                  hashed_password
+                  )
+              )
+    print(ret)
+    return str(user_id)
+
+def get_user(db, username):
+    return User(
+        {
+            "username": "test",
+            "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+        }
+    )
+
+
+def authenticate_user(db, username, password):
+    user = get_user(db, username)
+    if not user:
+        return False
+    if not auth_handler.verify_password(password, user.hashed_password):
+        return False
+    return user
 
 
 @app.post(
@@ -55,6 +105,5 @@ def get_user_get_id(
 def post_user_register(
     body: UserRegisterPostRequest = None,
 ) -> UserRegisterPostResponse | ErrorResponse:
-    pass
-
-
+    user_id = register_user(body)
+    return UserRegisterPostResponse(user_id=user_id)
