@@ -25,11 +25,14 @@ app = FastAPI(
     title="OTUS Highload Architect",
     version="1.0.0",
 )
+
+
 def register_user(user_model: UserRegisterPostRequest):
     hashed_password = auth_handler.get_password_hash(user_model.password)
     user_id = uuid.uuid4()
-    
-    ret = query_put("""
+
+    ret = query_put(
+        """
               INSERT INTO user (
                   id,
                   first_name,
@@ -38,29 +41,32 @@ def register_user(user_model: UserRegisterPostRequest):
                   password_hash
                   ) VALUES (%s,%s,%s,%s,%s)
               """,
-              (
-                  user_id.bytes,
-                  user_model.first_name,
-                  user_model.second_name,
-                  user_model.age,
-                  hashed_password
-                  )
-              )
+        (
+            user_id.bytes,
+            user_model.first_name,
+            user_model.second_name,
+            user_model.age,
+            hashed_password,
+        ),
+    )
     return str(user_id)
 
 
 def get_user_by_id(user_id: str):
     uid = uuid.UUID(user_id)
-    user = query_get("""
+    user = query_get(
+        """
         SELECT 
             user.id,
             user.first_name,
             user.second_name,
             user.age,
-                     user.password_hash
+            user.password_hash
         FROM user 
         WHERE id = %s
-        """, (uid.bytes))
+        """,
+        (uid.bytes),
+    )
     return user
 
 
@@ -68,7 +74,7 @@ def authenticate_user(user_id, password):
     user = get_user_by_id(user_id)[0]
     if not user:
         return False
-    if not auth_handler.verify_password(password, user['password_hash']):
+    if not auth_handler.verify_password(password, user["password_hash"]):
         return False
     return user
 
@@ -91,6 +97,7 @@ def post_login(
     token = auth_handler.create_access_token(data={"sub": body.id})
     return LoginPostResponse(token=token)
 
+
 @app.get(
     "/user/get/{id}",
     response_model=User,
@@ -103,7 +110,7 @@ def get_user_get_id(
     id: str,
 ) -> User | ErrorResponse:
     data = get_user_by_id(id)[0]
-    data['id'] = id
+    data["id"] = id
     return User(**data)
 
 
