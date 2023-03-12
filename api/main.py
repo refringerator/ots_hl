@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
 
 from models import (
     LoginPostRequest,
@@ -9,16 +8,15 @@ from models import (
     UserRegisterPostRequest,
     UserRegisterPostResponse,
 )
-from datetime import datetime
 from auth import Auth
-from fastapi import Depends, FastAPI, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import FastAPI, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
 import uuid
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 auth_handler = Auth()
 
-from database.query import query_get, query_put, query_update
+from database.query import query_get, query_put
 
 
 app = FastAPI(
@@ -31,16 +29,16 @@ def register_user(user_model: UserRegisterPostRequest):
     hashed_password = auth_handler.get_password_hash(user_model.password)
     user_id = uuid.uuid4()
 
-    ret = query_put(
+    query_put(
         """
-              INSERT INTO user (
-                  id,
-                  first_name,
-                  second_name,
-                  age,
-                  password_hash
-                  ) VALUES (%s,%s,%s,%s,%s)
-              """,
+            INSERT INTO user (
+                id,
+                first_name,
+                second_name,
+                age,
+                password_hash
+                ) VALUES (%s,%s,%s,%s,%s)
+            """,
         (
             user_id.bytes,
             user_model.first_name,
