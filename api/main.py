@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
 
 from models import (
     LoginPostRequest,
@@ -47,13 +48,6 @@ def register_user(user_model: UserRegisterPostRequest):
               )
     return str(user_id)
 
-def get_user(db, username):
-    return User(
-        {
-            "username": "test",
-            "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
-        }
-    )
 
 def get_user_by_id(user_id: str):
     uid = uuid.UUID(user_id)
@@ -62,18 +56,19 @@ def get_user_by_id(user_id: str):
             user.id,
             user.first_name,
             user.second_name,
-            user.age
+            user.age,
+                     user.password_hash
         FROM user 
         WHERE id = %s
         """, (uid.bytes))
     return user
 
 
-def authenticate_user(db, username, password):
-    user = get_user(db, username)
+def authenticate_user(user_id, password):
+    user = get_user_by_id(user_id)[0]
     if not user:
         return False
-    if not auth_handler.verify_password(password, user.hashed_password):
+    if not auth_handler.verify_password(password, user['password_hash']):
         return False
     return user
 
@@ -89,8 +84,12 @@ def authenticate_user(db, username, password):
 def post_login(
     body: LoginPostRequest = None,
 ) -> LoginPostResponse | ErrorResponse:
-    pass
+    user = authenticate_user(body.id, body.password)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
+    token = auth_handler.create_access_token(data={"sub": body.id})
+    return LoginPostResponse(token=token)
 
 @app.get(
     "/user/get/{id}",
