@@ -18,14 +18,18 @@ def register_user(user_model: UserRegisterPostRequest):
                 first_name,
                 second_name,
                 age,
+                biography,
+                city,
                 password_hash
-                ) VALUES (%s,%s,%s,%s,%s)
+                ) VALUES (%s,%s,%s,%s,%s,%s,%s)
             """,
         (
             user_id.bytes,
             user_model.first_name,
             user_model.second_name,
             user_model.age,
+            user_model.biography,
+            user_model.city,
             hashed_password,
         ),
     )
@@ -41,6 +45,8 @@ def get_user_by_id(user_id: str):
             user.first_name,
             user.second_name,
             user.age,
+            user.biography,
+            user.city,
             user.password_hash
         FROM user 
         WHERE id = %s
