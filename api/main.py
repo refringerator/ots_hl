@@ -11,70 +11,17 @@ from models import (
 from auth import Auth
 from fastapi import FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-import uuid
+from users import get_user_by_id, authenticate_user, register_user
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 auth_handler = Auth()
 
-from database.query import query_get, query_put
 
 
 app = FastAPI(
     title="OTUS Highload Architect",
     version="1.0.0",
 )
-
-
-def register_user(user_model: UserRegisterPostRequest):
-    hashed_password = auth_handler.get_password_hash(user_model.password)
-    user_id = uuid.uuid4()
-
-    query_put(
-        """
-            INSERT INTO user (
-                id,
-                first_name,
-                second_name,
-                age,
-                password_hash
-                ) VALUES (%s,%s,%s,%s,%s)
-            """,
-        (
-            user_id.bytes,
-            user_model.first_name,
-            user_model.second_name,
-            user_model.age,
-            hashed_password,
-        ),
-    )
-    return str(user_id)
-
-
-def get_user_by_id(user_id: str):
-    uid = uuid.UUID(user_id)
-    user = query_get(
-        """
-        SELECT 
-            BIN_TO_UUID(user.id) as id,
-            user.first_name,
-            user.second_name,
-            user.age,
-            user.password_hash
-        FROM user 
-        WHERE id = %s
-        """,
-        (uid.bytes),
-    )
-    return user
-
-
-def authenticate_user(user_id, password):
-    user = get_user_by_id(user_id)[0]
-    if not user:
-        return False
-    if not auth_handler.verify_password(password, user["password_hash"]):
-        return False
-    return user
 
 
 @app.post(
@@ -107,8 +54,8 @@ def post_login(
 def get_user_get_id(
     id: str,
 ) -> User | ErrorResponse:
-    data = get_user_by_id(id)[0]
-    return User(**data)
+    user_data = get_user_by_id(id)[0]
+    return User(**user_data)
 
 
 @app.post(

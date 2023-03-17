@@ -36,7 +36,7 @@ def query_put(sql, param):
         with connection.cursor() as cursor:
             cursor.execute(sql, param)
             connection.commit()
-            return cursor.lastrowid
+            return cursor.rowcount
 
 
 def query_update(sql, param):
