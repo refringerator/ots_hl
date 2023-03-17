@@ -55,7 +55,7 @@ def get_user_by_id(user_id: str):
     user = query_get(
         """
         SELECT 
-            user.id,
+            BIN_TO_UUID(user.id) as id,
             user.first_name,
             user.second_name,
             user.age,
@@ -108,7 +108,6 @@ def get_user_get_id(
     id: str,
 ) -> User | ErrorResponse:
     data = get_user_by_id(id)[0]
-    data["id"] = id
     return User(**data)
 
 
