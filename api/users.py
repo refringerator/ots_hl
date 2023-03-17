@@ -57,4 +57,3 @@ def authenticate_user(user_id, password):
     if not auth_handler.verify_password(password, user["password_hash"]):
         return False
     return user
-

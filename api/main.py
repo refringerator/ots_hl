@@ -17,7 +17,6 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 auth_handler = Auth()
 
 
-
 app = FastAPI(
     title="OTUS Highload Architect",
     version="1.0.0",
