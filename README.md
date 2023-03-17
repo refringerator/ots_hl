@@ -26,3 +26,4 @@ docker compose down
 # Materials
 * [MySQL UUID](https://www.mysqltutorial.org/mysql-uuid/)
 * [w3school Python MySQL](https://www.w3schools.com/python/python_mysql_insert.asp)
+* [Prevent sql injection](https://realpython.com/prevent-python-sql-injection/)
